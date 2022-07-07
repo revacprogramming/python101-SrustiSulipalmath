@@ -1,22 +1,24 @@
 # Using Web Services
 # https://www.py4e.com/lessons/servces
 
-from flask import Flask
+import urllib.request, urllib.parse, urllib.error 
 
-def _initialize_blueprints(application):
-    '''
-    Register Flask blueprints
-    '''
-    from app.views.s3 import s3
-    application.register_blueprint(s3, url_prefix='/api/v1/s3')
+import xml.etree.ElementTree as ET
 
-def create_app():
-    '''
-    Create an app by initializing components.
-    '''
-    application = Flask(__name__)
+url = input('Enter location: ')
 
-    _initialize_blueprints(application)
+archivo = urllib.request.urlopen(url)
 
-    # Do it!
-    return application
+data = archivo.read()
+
+print('Retrieving', len(data), 'characters') 
+
+xml_data = ET.fromstring(data)
+
+lst = xml_data.findall('.//count')  
+
+Cont = len(lst)    
+print("Count:", Cont)  
+
+lista = [int(item.text) for item in lst]   
+print("Sum:", sum(lista))
